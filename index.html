@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+    <meta name="theme-color" content="#0e1116">
+    <title>AqaraTwin – Ngôi nhà số (Demo)</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1116'/%3E%3Cpath d='M6 16 16 7l10 9v9H6z' fill='%233fb6ff'/%3E%3C/svg%3E">
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0e1116; color: #e8edf3;
+                   font-family: "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif; -webkit-tap-highlight-color: transparent; touch-action: none; }
+      #unity-container { position: fixed; top: 0; right: 0; bottom: 0; left: 0; }
+      #unity-canvas { width: 100%; height: 100%; display: block; background: #0e1116; touch-action: none; }
+      #unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(78vw, 360px); text-align: center; display: none; }
+      #unity-loading-title { font-size: 20px; margin-bottom: 18px; }
+      #unity-progress-bar-empty { width: 100%; height: 10px; border-radius: 5px; background: #242b36; overflow: hidden; }
+      #unity-progress-bar-full { width: 0%; height: 100%; background: #3fb6ff; transition: width 0.15s linear; }
+      #unity-loading-percent { margin-top: 10px; font-size: 14px; color: #9aa6b5; }
+      #unity-demo-footer { position: absolute; left: 0; right: 0; bottom: 0; padding: 6px 12px; font-size: 12px; text-align: center;
+                           color: #9aa6b5; background: rgba(14, 17, 22, 0.72); pointer-events: none; }
+      #unity-warning { position: absolute; left: 50%; top: 5%; transform: translate(-50%); max-width: 90vw; z-index: 1; }
+      #unity-warning div { background: white; color: #111; padding: 10px; margin-bottom: 4px; border-radius: 6px; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div id="unity-container">
+      <canvas id="unity-canvas" tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-loading-title">Đang tải ngôi nhà số…</div>
+        <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div>
+        <div id="unity-loading-percent">0%</div>
+      </div>
+      <div id="unity-warning"></div>
+      <div id="unity-demo-footer">Bản xem thử – dữ liệu mẫu, không kết nối thiết bị thật</div>
+    </div>
+    <script>
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var percentLabel = document.querySelector("#unity-loading-percent");
+      var footer = document.querySelector("#unity-demo-footer");
+      var warningBanner = document.querySelector("#unity-warning");
+
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() { warningBanner.style.display = warningBanner.children.length ? "block" : "none"; }
+        var div = document.createElement("div");
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == "error") div.style = "background: red; color: white; padding: 10px;";
+        else if (type == "warning") { div.style = "background: yellow; color: #111; padding: 10px;"; setTimeout(function () { warningBanner.removeChild(div); updateBannerVisibility(); }, 5000); }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/f9c2d3cbf7b269ffe459492b3f5973ae.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/d58a9c642b180041fc6f88f14686010b.data.unityweb",
+        frameworkUrl: buildUrl + "/36b37185393585fd5fd952d46cdd2152.framework.js.unityweb",
+        codeUrl: buildUrl + "/c634bb872d89d1259ba7a70b027a4891.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DangTrinh",
+        productName: "AqaraTwin",
+        productVersion: "0.1.0",
+        showBanner: unityShowBanner,
+      };
+
+      // Phones: cap the pixel ratio at 2 (3x rendering is too heavy for the GPU and the battery).
+      config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+      loadingBar.style.display = "block";
+
+      // Relative URLs only: the page works from a sub-path such as https://user.github.io/aqaratwin-web/.
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = function () {
+        createUnityInstance(canvas, config, function (progress) {
+          var p = Math.round(progress * 100);
+          progressBarFull.style.width = p + "%";
+          percentLabel.textContent = p + "%";
+        }).then(function (unityInstance) {
+          loadingBar.style.display = "none";
+          window.unityInstance = unityInstance;
+        }).catch(function (message) {
+          loadingBar.style.display = "none";
+          unityShowBanner(String(message), "error");
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
