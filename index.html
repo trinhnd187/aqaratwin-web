@@ -8,9 +8,9 @@
     <title>AqaraTwin – Ngôi nhà số (Demo)</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1116'/%3E%3Cpath d='M6 16 16 7l10 9v9H6z' fill='%233fb6ff'/%3E%3C/svg%3E">
     <style>
-      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0e1116; color: #e8edf3;
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; height: 100dvh; overflow: hidden; background: #0e1116; color: #e8edf3;
                    font-family: "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif; -webkit-tap-highlight-color: transparent; touch-action: none; }
-      #unity-container { position: fixed; top: 0; right: 0; bottom: 0; left: 0; }
+      #unity-container { position: fixed; top: 0; right: 0; bottom: 0; left: 0; inset: 0; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; }
       #unity-canvas { width: 100%; height: 100%; display: block; background: #0e1116; touch-action: none; }
       #unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(78vw, 360px); text-align: center; display: none; }
       #unity-loading-title { font-size: 20px; margin-bottom: 18px; }
@@ -54,12 +54,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/f9c2d3cbf7b269ffe459492b3f5973ae.loader.js";
+      var loaderUrl = buildUrl + "/898ac3c541ca4f212fad269541076056.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/d58a9c642b180041fc6f88f14686010b.data.unityweb",
+        dataUrl: buildUrl + "/53eefb9b63cf62a58662a1194913a2f1.data.unityweb",
         frameworkUrl: buildUrl + "/36b37185393585fd5fd952d46cdd2152.framework.js.unityweb",
-        codeUrl: buildUrl + "/c634bb872d89d1259ba7a70b027a4891.wasm.unityweb",
+        codeUrl: buildUrl + "/58e7792964d27f7600bf393ba08d1681.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DangTrinh",
         productName: "AqaraTwin",
@@ -69,6 +69,21 @@
 
       // Phones: cap the pixel ratio at 2 (3x rendering is too heavy for the GPU and the battery).
       config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      config.matchWebGLToCanvasSize = true;   // Unity sizes the drawing buffer from the canvas CSS size x devicePixelRatio
+
+      // The canvas must always fill the visible viewport (mobile URL bar, rotation, window resize).
+      // Only the container is sized here; the canvas width/height attributes belong to Unity.
+      function fitContainer() {
+        var vv = window.visualViewport;
+        var w = Math.round(vv ? vv.width : window.innerWidth);
+        var h = Math.round(vv ? vv.height : window.innerHeight);
+        container.style.width = w + "px";
+        container.style.height = h + "px";
+      }
+      fitContainer();
+      window.addEventListener("resize", fitContainer);
+      window.addEventListener("orientationchange", function () { fitContainer(); setTimeout(fitContainer, 250); });
+      if (window.visualViewport) window.visualViewport.addEventListener("resize", fitContainer);
 
       loadingBar.style.display = "block";
 

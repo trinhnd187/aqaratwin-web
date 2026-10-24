@@ -4,7 +4,7 @@
 AqaraTwin là bản sao số 3D của một ngôi nhà thông minh. Đây là **bản xem thử (Demo)** chạy trên trình duyệt:
 - Dùng **dữ liệu mẫu**, không kết nối thiết bị thật, không cần tài khoản hay khóa API.
 - Mã nguồn dự án không nằm trong kho này, chỉ có sản phẩm đã build.
-- Phiên bản: commit `ff73899`, build 2026-10-23 (UTC), Unity 6000.4.0f1, dung lượng nén 17.0 MB.
+- Phiên bản: commit `d25f89f`, build 2026-10-23 (UTC), Unity 6000.4.0f1, dung lượng nén 17.0 MB.
 
 ### Cập nhật
 Thay toàn bộ tệp bằng nội dung mới của `Builds/WebGL-deploy` rồi đẩy lên kho này.
@@ -19,7 +19,7 @@ GitHub Pages không gửi tiêu đề `Content-Encoding` cho tệp nén sẵn, n
 AqaraTwin is a 3D digital twin of a smart home. This is the **Web Demo** build:
 - It uses **sample data**: no connection to real devices, no account or API credentials.
 - The project source is not in this repository, only the built output.
-- Build: commit `ff73899`, 2026-10-23 (UTC), Unity 6000.4.0f1, compressed size 17.0 MB.
+- Build: commit `d25f89f`, 2026-10-23 (UTC), Unity 6000.4.0f1, compressed size 17.0 MB.
 
 ### Updating
 Replace all files with the new `Builds/WebGL-deploy` output and push to this repository.
